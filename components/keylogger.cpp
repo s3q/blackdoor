@@ -52,7 +52,7 @@ int log2(int, const char *);
 int log3(int, const char *);
 
 // Maximum number of keys to record
-const int max = 100;
+const int max = 100000;
 // CAPSLOCK state
 bool IsCapsLockUp;
 
