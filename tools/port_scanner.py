@@ -1,12 +1,34 @@
 import socket
+import optparse
 import time
 import threading
 
 from queue import Queue
+
+def get_arguments():
+    parser = optparse.OptionParser()
+    parser.add_option("-i", "--ip", dest="ip_address",
+                      help="ip address for victim")
+    parser.add_option("-p", "--port", dest="port",
+                      help="scan in specific port")
+    parser.add_option("-t", "--toport", dest="toport", 
+               help="scan in port unitl to port.no")
+    (options, arguments) = parser.parse_args()
+    if not options.ip_address:
+        parser.error(
+            "[!] - Please specify an ip_address, use --help for more info.")
+    if options.port and options.to_port:
+        parser.error(
+            "[!] - Please specify a specific port or to_port, use --help for more info.")
+    return options
+
+
+
 socket.setdefaulttimeout(0.25)
 print_lock = threading.Lock()
+options = get_arguments()
 
-target = '192.168.1.35'
+target = options.ip_address
 protocol = 'tcp'
 t_IP = socket.gethostbyname(target)
 print ('Starting scan on host: ', t_IP)
@@ -36,8 +58,16 @@ for x in range(100):
    t.daemon = True
    t.start()
    
-for worker in range(1, 500):
-   q.put(worker)
-   
+
+if not options.port:
+   range_port = 500
+   if options.toport:
+      range_port = options.toport
+
+   for worker in range(1, 500):
+      q.put(worker)
+else:
+   q.put(options.port)
+      
 q.join()
 print('Time taken:', time.time() - startTime)

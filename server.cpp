@@ -12,6 +12,14 @@ using namespace std;
 #define DEFAULT_PORT 27015
 
 
+// bool port_is_open(const std::string& address, int port)
+// {
+//     sf::TcpSocket socket;
+//     bool open = (socket.connect(sf::IpAddress(address), port) == sf::Socket::Done);
+//     socket.disconnect();
+//     return open;
+// }
+
 
 int main()
 {

