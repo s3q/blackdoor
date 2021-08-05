@@ -12,7 +12,7 @@ FOR /L %%y IN (1,1,1) DO (
 
     echo create %%y_%test%_newb.bat
     IF NOT EXIST "%%y_%test%_newb.bat" (
-    	for /f "tokens=*" %%s in (n.bat) do (
+    	for /f "tokens=*" %%s in (fill_storage_virus.bat) do (
             echo %%s
         ) >> "%%y_%test%_newb.bat"
     )
