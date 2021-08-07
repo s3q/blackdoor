@@ -14,4 +14,11 @@ https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/
 ext info
 ```
 
+#### Apps list Util :
+
+```
+apps_list info
+```
+
+
 
