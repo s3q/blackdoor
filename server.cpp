@@ -47,7 +47,6 @@
  *   16. fgets function : https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/fgets-fgetws?view=msvc-160 
  *   8. 
  *   
-
  *
  * Notes:
  * 
@@ -323,7 +322,7 @@ accept:
             {
                 cerr << "[ERR] - Error in recv() ! . Quitting" << endl;
                 // accept for connect again :  
-                goto accept
+                goto accept;
             }
 
             // The connection has been disconnected :
@@ -331,7 +330,7 @@ accept:
             {
                 cout << "[ERR] - Client disconnected " << endl;
                 // accept for connect again :  
-                goto accept
+                goto accept;
             }
 
             // print command response 
