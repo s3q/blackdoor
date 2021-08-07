@@ -6,7 +6,8 @@ https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/
 
 #### Extensions Util :
 
-```ext info
+```
+ext info
 ```
 
 
