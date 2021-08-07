@@ -4,9 +4,9 @@ A ready-made tool to connect to the backdoor file through the tcp protocol, and 
 
 https://raw.githubusercontent.com/s3q/blackdoor/main/extensions/
 
+#### Extensions Util :
 
-```ruby
-require 'redcarpet'
-markdown = Redcarpet.new("Hello World!")
-puts markdown.to_html
+```ext info
 ```
+
+
