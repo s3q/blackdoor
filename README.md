@@ -1,6 +1,6 @@
 
 
-# blackdoor
+# blackdoor 🚪
 
 <div style="text-align:center;"><img src="https://github.com/s3q/blackdoor/blob/main/blackdoor.jpg?raw=true" /></div>
 
@@ -8,8 +8,8 @@ A ready-made tool to connect to the backdoor file through the tcp protocol, and 
 
 
 
-## Additions :
-The additions help you perform different hacking tasks quickly
+## Additions 💣 :
+The additions help you perform different hacking tasks quickly 🍟
 
 #### Extensions Util :
 It has powerful add-ons in the network and control of the victim's device and to perform many tasks that help you achieve a successful penetration
