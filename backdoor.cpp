@@ -60,6 +60,7 @@
 #endif
 #include <iostream>
 #include <fstream>
+#include <winsock2.h>
 #include <WS2tcpip.h>
 #include <unistd.h>
 #include <cstdlib>
